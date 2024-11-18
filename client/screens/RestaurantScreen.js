@@ -20,7 +20,10 @@ export default function RestaurantScreen() {
       dispatch(setRestaurant({...item}))
     }
   },[])
-  //console.log('restaurant', item);
+
+  // item.dishes가 배열인지 확인 후, 없으면 빈 배열 반환
+  const dishes = Array.isArray(item.dishes) ? item.dishes : [];
+
   return (
     <View>
       <CartIcon></CartIcon>
@@ -53,7 +56,7 @@ export default function RestaurantScreen() {
                 <Text className="text-xs">
                   <Text className="text-green-700">{item.stars}</Text>
                   <Text className="text-gray-700">
-                    ({item.reviews} 개의 리뷰) :{" "}
+                    ({item.reviews} 개의 리뷰) • {" "}
                     <Text className="font-semibold">{item?.type?.name}</Text>
                   </Text>
                 </Text>
@@ -61,7 +64,7 @@ export default function RestaurantScreen() {
               <View className="flex-row items-between space-x-1 ml-4">
                 <Icon.MapPin color="gray" width="15" height="15"></Icon.MapPin>
                 <Text className="text-gray-700 text-xs">
-                  Nearby : {item.address}{" "}
+                  위치 • {item.address}{" "}
                 </Text>
               </View>
             </View>
@@ -70,9 +73,15 @@ export default function RestaurantScreen() {
         </View>
         <View className='pb-36 bg-white'>
           <Text className='px-4 py-4 text-2xl font-bold ml-6'>Menu</Text>
-          {/* /메뉴 */}
+          {/* 메뉴가 존재할 경우만 출력 */}
           {
-            item.dishes.map((dish,index)=> <Dishrow item={{...dish}} key={index}></Dishrow>)
+            dishes.length > 0 ? (
+              dishes.map((dish, index) => (
+                <Dishrow item={{ ...dish }} key={index}></Dishrow>
+              ))
+            ) : (
+              <Text className="text-center text-gray-500">메뉴가 없습니다.</Text>
+            )
           }
         </View>
       </ScrollView>
